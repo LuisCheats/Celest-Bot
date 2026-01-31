@@ -482,7 +482,7 @@ let handler = async (m, { conn, usedPrefix: _p, args, sender }) => {
         forwardedNewsletterMessageInfo: {
           newsletterJid: '120363402648953286@newsletter',
           serverMessageId: '',
-          newsletterName: '️ unknown'
+          newsletterName: '️𝘼𝙫𝙚𝙧𝙧𝙮𝙏𝙚𝙖𝙢'
         }
       }
     }, { quoted: m })
