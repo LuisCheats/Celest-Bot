@@ -34,7 +34,7 @@ setTimeout(async () => {
 let { say } = cfonts
 console.clear()
 console.log(chalk.hex('#00FFFF')('╔══════════════════════════════╗'))
-console.log(chalk.hex('#00FFFF').bold('║         SHIROKO - BOT         ║'))
+console.log(chalk.hex('#00FFFF').bold('║         AVERRY - BOT         ║'))
 console.log(chalk.hex('#00FFFF')('╚══════════════════════════════╝'))
 
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {

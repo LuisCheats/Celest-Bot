@@ -20,14 +20,14 @@ global.tiempo = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', 
 // ─────────────────────────────
 
 global.botNumber = "" // Agregue el número del Bot en "botNumber" si desea recibir código de 8 dígitos sin registrar el número en la consola.
-global.owner = ["573114910796", "573237649689", "5217225305296"]
-global.suittag = ["573114910796"] 
+global.owner = ["50765836410"]
+global.suittag = ["50765836410"] 
 global.prems = []
 global.prefix = ["/"]
 global.libreria = "Multi Device"
 global.vs = "1.0"
 global.languaje = 'Español'
-global.nameqr = "Shiroko"
+global.nameqr = "Averry"
 global.apikey = 'Arlette-Xz'
 global.sessions = "Sessions/Principal"
 global.jadi = "Sessions/SubBot"
@@ -37,11 +37,11 @@ global.shirokobot = true
 //  CONFIG INFORMACIÓN DEL BOT
 // ─────────────────────────────
 
-global.botname = "Shiroko"
-global.textbot = "made with by Arlette Xz"
-global.dev = "© powered by Arlette Xz"
-global.author = "© made with by Arlette Xz"
-global.etiqueta = "Arlette Xz"
+global.botname = "Averry"
+global.textbot = "made with by 7Noonly"
+global.dev = "© powered by 7Noonly "
+global.author = "© made with by 7Noonly"
+global.etiqueta = "7Noonly"
 global.currency = "Sky-Coins"
 
 // ─────────────────────────────
@@ -68,13 +68,13 @@ global.welcomeConfig = {
 //  REDES SOCIALES
 // ─────────────────────────────
 
-global.canalNombre = "【 ✰ 】𝗦𝗵𝗶𝗿𝗼𝗸𝗼 𝗕𝗼𝘁 - 𝗢𝗳𝗶𝗰𝗶𝗮𝗹"
-global.group = "https://chat.whatsapp.com/CN8JtNy0BTCHb2v5009AL5"
-global.channel = "https://whatsapp.com/channel/0029VbAmwbQBqbr587Zkni1a"
-global.github = "https://github.com/Arlette-Xz/Shiroko-Bot"
-global.gmail = "arlette.x7z@gmail.com"
+global.canalNombre = "𝘼𝙫𝙚𝙧𝙧𝙮𝙏𝙚𝙖𝙢"
+global.group = ""
+global.channel = ""
+global.github = "https://github.com/LuisCheats/Averry-Bot"
+global.gmail = "averry_team@gmail.com"
 global.ch = {
-    ch1: "120363403176894973@newsletter"
+    ch1: "120363402648953286"
 }
 
 // ─────────────────────────────
