@@ -487,7 +487,7 @@ loadCommandsFromFolders().then((_) => Object.keys(global.plugins)).catch(console
 
 conn.isInit = false
 console.log(chalk.hex('#00FFFF')('╔══════════════════════════════╗'))
-console.log(chalk.hex('#00FFFF').bold('║         SHIROKO - LISTO        ║'))
+console.log(chalk.hex('#00FFFF').bold('║         AVERRY - LISTO        ║'))
 console.log(chalk.hex('#00FFFF')('╚══════════════════════════════╝'))
 
 setupWatcher()
