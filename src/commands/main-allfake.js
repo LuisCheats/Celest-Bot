@@ -12,7 +12,7 @@ handler.all = async function (m) {
 
     global.nombre = m.pushName || 'Usuario'
     global.packsticker = `† 7Noonly Team\n Goticas Qlonas\n\nMade By Luis777`
-    global.packsticker2 = `Bot\n${global.botname} \n\nUsuario:\n${nombre}`
+    global.packsticker2 = `\n\nBot\n${global.botname} \n\nUsuario:\n${nombre}`
     
     const canalConfig = {
         newsletterJid: global.idchannel,
