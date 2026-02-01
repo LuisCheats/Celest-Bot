@@ -474,32 +474,19 @@ let handler = async (m, { conn, usedPrefix: _p, args, sender }) => {
 
     const txt = `${menuHeader}\n\n${selectedMenu}\n\n> By 7Noonly `
     
-    conn.sendMessage(
-  m.chat,
-  {
-    image: menuImage,
-    caption: txt,
-    contextInfo: {
-      mentionedJid: [sender],
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: '120363402648953286@newsletter',
-        serverMessageId: 100,
-        newsletterName: '️𝘼𝙫𝙚𝙧𝙧𝙮𝙏𝙚𝙖𝙢'
-      },
-      externalAdReply: {
-        title: botname,
-        body: 'Menú de Comandos • 7Noonly',
-        mediaType: 1,
-        previewType: 'PHOTO',
-        thumbnailUrl: 'https://files.catbox.moe/j6ci3o.jpg', // cambia si quieres
-        sourceUrl: 'https://whatsapp.com/channel/0029VbBJZs5G8l5EwrjizJ2H',
-        renderLargerThumbnail: true
+    conn.sendMessage(m.chat, {
+      image: menuImage,
+      caption: txt,
+      contextInfo: {
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363402648953286@newsletter',
+          serverMessageId: '',
+          newsletterName: '️𝘼𝙫𝙚𝙧𝙧𝙮𝙏𝙚𝙖𝙢'
+        }
       }
-    }
-  },
-  { quoted: m }
-)
+    }, { quoted: m })
+
   } catch (e) {
     conn.sendMessage(m.chat, {
       text: `✰ Error en el menú:\n${e}`
