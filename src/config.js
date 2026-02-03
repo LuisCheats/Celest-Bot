@@ -22,12 +22,12 @@ global.tiempo = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', 
 global.botNumber = "" // Agregue el número del Bot en "botNumber" si desea recibir código de 8 dígitos sin registrar el número en la consola.
 global.owner = ["50765836410", "524452773745", "524452773745"]
 global.suittag = ["50765836410"]
-global.prems = []
+global.prems = ["524452773745"]
 global.prefix = ["/","Luispapi"]
 global.libreria = "Multi Device"
 global.vs = "1.0"
 global.languaje = 'Español'
-global.nameqr = "Celest Bot"
+global.nameqr = "Averry"
 global.apikey = 'Arlette-Xz'
 global.sessions = "Sessions/Principal"
 global.jadi = "Sessions/SubBot"
@@ -37,7 +37,7 @@ global.shirokobot = true
 //  CONFIG INFORMACIÓN DEL BOT
 // ─────────────────────────────
 
-global.botname = "Averry"
+global.botname = "Celest Bot"
 global.textbot = "made with by 7Noonly"
 global.dev = "© powered by 7Noonly "
 global.author = "© made with by 7Noonly"
