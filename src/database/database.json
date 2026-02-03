@@ -76,7 +76,7 @@
       "marry": "",
       "description": "",
       "packstickers": null,
-      "premium": true,
+      "premium": false,
       "premiumTime": 0,
       "banned": false,
       "bannedReason": "",
