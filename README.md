@@ -1,23 +1,42 @@
-<h1 align="center">Averry Bot</h1>  
-<p align="center"><i>Bot de Whatsapp</i></p>
+![nagi Bot](https://raw.githubusercontent.com/El-brayan502/img/upload/uploads/b8bc9f-1770127436127.jpg)
 
+---
+
+<!-- Créditos -->
 <p align="center">
-  <img src="./src/celest.jpg" width="100%"/>
+  <b>Autor:</b> 7Noonly
 </p>
 
-### **`❕️ Información importante 💙`**
+---
 
-**`Celest-Bot`** es un bot de WhatsApp basado en Node.js que utiliza la librería **@whiskeysockets/Baileys**
-Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
+> Nota: Copie y pegue los comandos en termux uno por uno.
 
-🚫 Este proyecto NO está afiliado a WhatsApp ni WhatsApp LLC.
-un bot hecho 100% por **[7Noonly] https://github.com/LuisCheats**.
+```bash
+termux-setup-storage
+```
 
-#### Características
-Configuración avanzada de grupos 
-Bienvenidas personalizadas  
-Herramientas útiles  
+```bash
+pkg update && pkg upgrade
+```
 
+```bash
+pkg install git nodejs ffmpeg imagemagick -y
+```
 
-Descargas y búsquedas multi-plataforma  
-Extensiones adicionales
+```bash
+git clone https://github.com/LuisCheats/CelestBot
+```
+
+```bash
+cd CelestBot
+```
+
+```bash
+npm install
+```
+
+```bash
+npm start
+```
+
+---
