@@ -4,7 +4,7 @@ import { join } from 'path'
 let handler = async (m, { conn, usedPrefix, isROwner }) => {
   if (!isROwner) return
   try {
-    const { key } = await conn.reply(m.chat, `ꕤ Reiniciando a *Shiroko*...`, m)
+    const { key } = await conn.reply(m.chat, `ꕤ Reiniciando a *Celest*...`, m)
     
     const restartPath = join(process.cwd(), 'src', 'json', 'restart.json')
     

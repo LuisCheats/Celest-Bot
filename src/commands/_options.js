@@ -4,7 +4,7 @@ const handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin })
     if (primaryBot && conn.user.jid !== primaryBot) return
 
     const type = command.toLowerCase()
-    const nombreBot = 'Shiroko'
+    const nombreBot = 'Celest'
     
     const configMap = {
         welcome: ['welcome', 'bienvenida'],

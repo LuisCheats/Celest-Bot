@@ -6,7 +6,7 @@ let handler = async (m, { conn, args, usedPrefix }) => {
     let userId = mentionedJid && mentionedJid[0] ? mentionedJid[0] : m.sender
 
     // Se usan las variables globales definidas. Se ASUME que global.icono es un Buffer.
-    const nombreBot = global.botname || 'Shiroko'
+    const nombreBot = global.botname || 'Celest'
     const moneda = global.currency || 'Sky-Coins'
     const textobot = global.textbot || 'Made with love by Arlette Xz'
     const canal = global.channel || 'https://whatsapp.com/channel/0029VbBj5it3LdQMIxu7zP1l'

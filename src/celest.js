@@ -225,6 +225,6 @@ global.dfail = (type, m, conn) => {
 let file = global.__filename(import.meta.url, true)
 watchFile(file, async () => {
     unwatchFile(file)
-    console.log(chalk.magenta("Se actualizo 'shiroko.js'"))
+    console.log(chalk.magenta("Se actualizo 'celest.js'"))
     if (global.reloadHandler) console.log(await global.reloadHandler())
 })

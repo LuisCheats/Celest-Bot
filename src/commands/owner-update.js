@@ -24,7 +24,7 @@ var handler = async (m, { conn, text, isROwner }) => {
             const stats = lines.find(line => line.includes('changed'));
             const changedCount = stats ? stats.match(/\d+/g)[0] : '0';
 
-            const message = `\`❏ Actualización\`\n──────────────────\n\n*ꕤ Lista de Archivos*\n${files}\n\n*ꕤ Cambios Totales: ${changedCount}*\n\n> By *Shiroko*`
+            const message = `\`❏ Actualización\`\n──────────────────\n\n*ꕤ Lista de Archivos*\n${files}\n\n*ꕤ Cambios Totales: ${changedCount}*\n\n> By *Celest*`
             
             return conn.reply(m.chat, message, m)
         }

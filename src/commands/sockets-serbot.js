@@ -1,17 +1,6 @@
-// SHIROKO-BOT
+// CELEST-BOT
 // =========================
-// Desarrolladora: Arlette Xz (GitHub: Arlette-Xz)
-// Repositorio: https://github.com/Arlette-Xz/Shiroko-Bot
-
-// Inspirado en:
-// - Jadibot (arquitectura)
-// - MysticBot-MD (2024)
-
-// Técnico:
-// v1.0.3 | JavaScript/Node.js
-// Diciembre 2025 | En desarrollo
-
-// Nota: Código original con mejoras propias.
+// DEVELOPER : 7Noonly (GitHub: LLuisCheast)
 // =========================
 
 import { 
@@ -175,7 +164,7 @@ export async function shirokoJadiBot(options) {
     sock.ev.on('creds.update', saveCreds)
     
     try {
-        let handlerFile = await import('../shiroko.js')
+        let handlerFile = await import('../celest.js')
         sock.handler = handlerFile.handler.bind(sock)
         
         sock.ev.on('messages.upsert', async (chatUpdate) => {

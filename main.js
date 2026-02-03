@@ -238,7 +238,7 @@ async function connectionUpdate(update) {
 
 global.reloadHandler = async function (restatConn) {
     try {
-        const Handler = await import(`./src/shiroko.js?update=${Date.now()}`).catch(console.error)
+        const Handler = await import(`./src/celest.js?update=${Date.now()}`).catch(console.error)
         if (Object.keys(Handler || {}).length) {
             handler = Handler
             if (global.processedMessages) {
@@ -422,7 +422,7 @@ process.on('unhandledRejection', (reason, promise) => {
 })
 
 let isInit = true
-let handler = await import('./src/shiroko.js')
+let handler = await import('./src/celest.js')
 
 _quickTest().catch(console.error)
 

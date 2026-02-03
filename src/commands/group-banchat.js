@@ -1,6 +1,6 @@
 let handler = async (m, { conn, usedPrefix, command, args }) => {
 let chat = global.db.data.chats[m.chat]
-let nombreBot = global.botname || 'Shiroko'
+let nombreBot = global.botname || 'Celest'
 
 if (command === 'bot') {
 if (args.length === 0) {

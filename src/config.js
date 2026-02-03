@@ -51,7 +51,7 @@ global.currency = "Sky-Coins"
 global.banner = fs.readFileSync('./src/assets/banner.jpg')
 global.icono = fs.readFileSync('./src/assets/menu.jpg')
 global.catalogo = fs.readFileSync('./src/assets/menu.jpg')
-global.logo = fs.readFileSync('./src/shiroko.jpg')
+global.logo = fs.readFileSync('./src/celest.jpg')
 
 // ─────────────────────────────
 //  CONFIG WELCOME

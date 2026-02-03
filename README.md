@@ -2,12 +2,12 @@
 <p align="center"><i>Bot de Whatsapp</i></p>
 
 <p align="center">
-  <img src="./src/shiroko.jpg" width="100%"/>
+  <img src="./src/celest.jpg" width="100%"/>
 </p>
 
 ### **`❕️ Información importante 💙`**
 
-**`Shiroko-Bot`** es un bot de WhatsApp basado en Node.js que utiliza la librería **@whiskeysockets/Baileys**
+**`Celest-Bot`** es un bot de WhatsApp basado en Node.js que utiliza la librería **@whiskeysockets/Baileys**
 Este bot ofrece una variedad de características para mejorar tu experiencia en WhatsApp.
 
 🚫 Este proyecto NO está afiliado a WhatsApp ni WhatsApp LLC.
