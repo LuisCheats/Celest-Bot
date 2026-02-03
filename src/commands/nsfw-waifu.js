@@ -4,7 +4,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     try {
         m.react('🕒');
         
-        const response = await fetch('https://averry-api.vercel.app/docs?share=nsfw');
+        const response = await fetch('https://averry-api.vercel.app/nsfw/nsfw1');
         if (!response.ok) throw new Error('Error en la API');
         
         const { url } = await response.json();
