@@ -6,7 +6,7 @@ const BOT_OWNER_INFO = {
     cargo: 'Dueño Principal',
     nota: 'Creador del Bot',
     region: 'Japon 🇯🇵',
-    web: 'https://github.com/Arlette-Xz',
+    web: 'https://github.com/LuisCheats',
 }
 
 function createVCard(contactData, biography) {
