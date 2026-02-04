@@ -1,29 +1,59 @@
-import fetch from 'node-fetch';
+import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from '@whiskeysockets/baileys'
 
-const handler = async (m, { conn }) => {
+let handler = async (m, { conn }) => {
   try {
-    m.react('🕒');
-    
-    const res = await fetch('https://averry-api.vercel.app/nsfw/nsfw1', {
-      headers: { 'User-Agent': 'Mozilla/5.0' }
-    });
-    
-    const buffer = await res.buffer();
-    
-    await conn.sendFile(
-      m.chat,
-      buffer,
-      'nsfw.jpg',
-      '🔥 NSFW',
-      m
-    );
-    
-    m.react('✔️');
-    
-  } catch (e) {
-    m.react('✖️');
-    await conn.sendMessage(m.chat, { text: '❌ Error al cargar la imagen' }, { quoted: m });
-  }
-};
+    await conn.sendMessage(m.chat, { react: { text: '👑', key: m.key } })
 
-export default handler;
+    const menuText = `> *Hola Soy Luis Creador Del Bot Que Estas Usando*\n\n> sᴇʟᴇᴄɪᴏɴᴀ ᴜɴ ᴍᴇᴛᴏᴅᴏ ᴘᴀʀᴀ ᴄᴏᴍᴜɴɪᴄᴀʀᴛᴇ ᴄᴏɴᴍɪɢᴏ 🧃:`
+
+    const imageUrl = 'https://averry-api.vercel.app/nsfw/nsfw1'
+
+    const nativeButtons = [
+      {
+        name: 'cta_url',
+        buttonParamsJson: JSON.stringify({ 
+          display_text: '𝙄𝙣𝙨𝙩𝙖𝙜𝙧𝙖𝙢 📸', 
+          url: 'https://www.instagram.com/lzzin.xyz' 
+        })
+      },
+      {
+        name: 'cta_url',
+        buttonParamsJson: JSON.stringify({ 
+          display_text: '𝙊𝙬𝙣𝙚𝙧 👑', 
+          url: 'https://wa.me/50765836410' 
+        })
+      }
+    ]
+
+    // === Imagen desde URL ===
+    const media = await prepareWAMessageMedia({ image: { url: imageUrl } }, { upload: conn.waUploadToServer })
+    const header = proto.Message.InteractiveMessage.Header.fromObject({
+      hasMediaAttachment: true,
+      imageMessage: media.imageMessage
+    })
+
+    // === Crear mensaje interactivo ===
+    const interactiveMessage = proto.Message.InteractiveMessage.fromObject({
+      body: proto.Message.InteractiveMessage.Body.fromObject({ text: menuText }),
+      header,
+      nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+        buttons: nativeButtons
+      })
+    })
+
+    const msg = generateWAMessageFromContent(m.chat, { interactiveMessage }, { userJid: conn.user.jid, quoted: m })
+    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+  } catch (e) {
+    console.error('❌ Error en el comando owner:', e)
+    await conn.sendMessage(m.chat, {
+      text: `❌ *Error al cargar la información del creador*\n\n🔗 Contacta directamente: https://wa.me/50765836410\n\n⚠️ *Error:* ${e.message}`
+    }, { quoted: m })
+  }
+}
+
+handler.help = ['owner', 'creador']
+handler.tags = ['info']
+handler.command = ['owner1', 'creador1', 'contacto1']
+
+export default handler
