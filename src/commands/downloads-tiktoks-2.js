@@ -1,77 +1,53 @@
-import axios from 'axios'
+import fetch from 'node-fetch';
 
-const handler = async (m, { conn, text, usedPrefix }) => {
-    if (!text) return conn.reply(m.chat, 'ꕤ Por favor, ingresa el enlace de TikTok.\nEjemplo: !tiktok https://www.tiktok.com/@usuario/video/123456789', m)
-    
-    const isUrl = /tiktok\.com|vt\.tiktok\.com/i.test(text)
-    if (!isUrl) return conn.reply(m.chat, 'ꕤ Ingresa un enlace válido de TikTok (debe contener tiktok.com o vt.tiktok.com)', m)
-    
-    const API_URL = 'https://averry-api.vercel.app/download/tiktok'
-    
-    try {
-        const apiUrl = `\( {API_URL}?url= \){encodeURIComponent(text)}&hd=1`
-        // console.log('Llamando a:', apiUrl) // descomenta para debug
+export default {
+    command: ['tiktoksearch', 'ttsearch', 'tts'],
+    category: 'search',
+    run: async (client, m, args) => {
+        const botId = client.user.id.split(':')[0] + '@s.whatsapp.net'
+        const botSettings = global.db.data.settings[botId]
+        const banner = botSettings.icon
         
-        const { data: res } = await axios.get(apiUrl, {
-            timeout: 20000,
-            headers: { 'User-Agent': 'Mozilla/5.0' }
-        })
-        
-        if (!res?.status || !res?.data?.urls?.length) {
-            const errorMsg = res?.error || 'No se pudo extraer el video'
-            return conn.reply(m.chat, `ꕤ Error de la API: ${errorMsg}`, m)
+        if (!args || !args.length) {
+            return client.reply(
+                m.chat,
+                `✿ Ingresa un término de búsqueda.`,
+                m,
+            )
         }
         
-        const apiData = res.data
-        const videoUrl = apiData.urls[0] // Primer link = HD / principal
-        const meta = apiData.metadata || {}
+        const query = args.join(' ')
+        const url = `${api.url}/search/tiktok?query=${query}&key=${api.key}`
         
-        const caption = createCaption(meta)
+        // await m.reply(mess.wait)
         
-        await conn.sendMessage(m.chat, {
-            video: { url: videoUrl },
-            caption,
-            mimetype: 'video/mp4',
-            fileName: 'tiktok_video.mp4'
-        }, { quoted: m })
-        
-        // Opcional: enviar thumbnail / portada
-        if (meta.thumbnail) {
-            await conn.sendMessage(m.chat, {
-                image: { url: meta.thumbnail },
-                caption: 'Portada del video'
-            }, { quoted: m })
+        try {
+            const res = await fetch(url)
+            const json = await res.json()
+            
+            if (!json || !json.data || !json.data.length) {
+                return client.reply(m.chat, `✿ No se encontraron resultados para "${query}".`, m)
+            }
+            
+            let message = ``
+            json.data.forEach((result, index) => {
+                message += `➩ *Título ›* ${result.title}
+
+𖹭  ׄ  ְ ✿ *Autor ›* ${result.author.nickname} (@${result.author.unique_id})
+𖹭  ׄ  ְ ✤ *Reproducciones ›* ${result.stats.views}
+𖹭  ׄ  ְ ✰ *Comentarios ›* ${result.stats.comments}
+𖹭  ׄ  ְ ❖ *Compartidos ›* ${result.stats.shares}
+𖹭  ׄ  ְ ꕥ *Me gusta ›* ${result.stats.likes}
+𖹭  ׄ  ְ ☄︎ *Descargas ›* ${result.downloads}
+𖹭  ׄ  ְ ⚡︎ *Duración ›* ${result.duration}
+𖹭  ׄ  ְ ❑ *URL ›* https://www.tiktok.com/@${result.author.unique_id}/video/${result.video_id}
+
+${index < json.data.length - 1 ? '╾۪〬─ ┄۫╌ ׄ┄┈۪ ─〬 ׅ┄╌ ۫┈ ─ׄ─۪〬 ┈ ┄۫╌ ┈┄۪ ─ׄ〬╼' : ''}
+        `
+            })
+            await client.sendContextInfoIndex(m.chat, message, {}, m, true, {})
+        } catch (e) {
+            await m.reply(msgglobal)
         }
-        
-    } catch (e) {
-        console.error('Error TikTok Averry:', e)
-        let errMsg = e.message || 'Error desconocido'
-        if (e.response?.data?.error) errMsg += `\nAPI: ${e.response.data.error}`
-        await conn.reply(m.chat, `⚠︎ Error al descargar el video:\n${errMsg}`, m)
-    }
-}
-
-function createCaption(meta) {
-    const title = meta.title || meta.description || 'Sin título'
-    const author = meta.creator || 'Desconocido'
-    // No hay duración ni música en esta API → valores fijos o vacíos
-    const duration = 'No disponible'
-    const music = 'No disponible'
-    
-    return `❏ TIKTOK DOWNLOAD
-──────────────────
-> ❀ *Título:* ${title}
-> ☕︎ *Autor:* ${author}
-> ✰ *Duración:* ${duration}
-> 𝅘𝅥𝅮 *Música:* ${music}
-
-> ૮꒰ ˶• ᴗ •˶꒱ა Disfruta tu video sin marca de agua!`
-}
-
-handler.help = ['tiktok', 'tt', 'tik']
-handler.tags = ['descargas']
-handler.command = /^(tiktok|tt|tik)$/i
-handler.group = true
-handler.limit = true // opcional: ponle límite si quieres
-
-export default handler
+    },
+};
