@@ -1,8 +1,8 @@
 #!bin/bash
-GREEN='\033[0;32m'
+CYAN='\033[0;36m'
 while :
 do
-echo "$ORANGE"
+echo "$CYAN"
 cat <<"EOF"
    ██░▀██████████████▀░███
    █▌▒▒░████████████░▒▒▐██
@@ -23,6 +23,8 @@ cat <<"EOF"
    ██▄▄▄▄▀▀┴┴╚╧╧╝╧╧╝┴┴████
    ███████████████████████
 EOF
+echo
+echo "@7NOONLY"
 echo
     npm start
     sleep 1
