@@ -4,7 +4,7 @@ const handler = async (m, { conn, usedPrefix, command }) => {
     try {
         m.react('🕒');
         
-        const response = await fetch('https://api.waifu.pics/sfw/waifu');
+        const response = await fetch('https://celest-api.vercel.app/api/random/waifu');
         if (!response.ok) throw new Error('Error en la API');
         
         const { url } = await response.json();
