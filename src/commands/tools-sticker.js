@@ -1,53 +1,86 @@
-import { sticker } from '../../lib/sticker.js'
-import uploadFile from '../../lib/uploadFile.js'
-import uploadImage from '../../lib/uploadImage.js'
-import { webp2png } from '../../lib/webp2mp4.js'
+import fs from 'fs'
+import path from 'path'
+import fetch from 'node-fetch'
+import fluent from 'fluent-ffmpeg'
+import { fileTypeFromBuffer as fromBuffer } from 'file-type'
+import { addExif } from '../lib/sticker.js'
 
 let handler = async (m, { conn, args }) => {
-    let stiker = false
-    let userId = m.sender
-    let packstickers = global.db.data.users[userId] || {}
-    let texto1 = packstickers.text1 || global.packsticker
-    let texto2 = packstickers.text2 || global.packsticker2
+    let q = m.quoted ? m.quoted : m
+    let mime = (q.msg || q).mimetype || q.mediaType || ''
+    let buffer
     
     try {
-        let q = m.quoted ? m.quoted : m
-        let mime = (q.msg || q).mimetype || q.mediaType || ''
-        let txt = args.join(' ')
-        
-        if (/webp|image|video/g.test(mime) && q.download) {
-            if (/video/.test(mime) && (q.msg || q).seconds > 15) {
-                return conn.reply(m.chat, 'ꕤ El video no puede durar más de 15 segundos.', m, (global.rcanalr || {}))
-            }
-            
-            let buffer = await q.download()
-            let marca = txt ? txt.split(/[\u2022|]/).map(part => part.trim()) : [texto1, texto2]
-            stiker = await sticker(buffer, false, marca[0], marca[1])
-            
+        if (/image|video/g.test(mime) && q.download) {
+            if (/video/.test(mime) && (q.msg || q).seconds > 11)
+                return conn.reply(m.chat, '*ⓘ* El video no puede durar más de *10 segundos*', m, rcanalx)
+            buffer = await q.download()
         } else if (args[0] && isUrl(args[0])) {
-            stiker = await sticker(false, args[0], texto1, texto2)
-            
+            const res = await fetch(args[0])
+            buffer = await res.buffer()
         } else {
-            return conn.reply(m.chat, 'ꕤ Envía una imagen o video para hacer sticker.', m, (global.rcanalr || {}))
+            return conn.reply(m.chat, '*📍 Responde a una imagen o video*', m, rcanal)
         }
+        await m.react('🕓')
         
-        if (stiker) {
-            conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
-        } else {
-            conn.reply(m.chat, 'ꕤ Error al crear el sticker.', m)
-        }
+        const stickers = await toWebp(buffer)
+        let dl_url = await addExif(stickers, global.sticker, global.dev)
         
-    } catch {
-        conn.reply(m.chat, 'ꕤ Ocurrió un error al procesar.', m)
+        await conn.sendFile(m.chat, dl_url, 'sticker.webp', '', m)
+        await m.react('✅')
+        return
+    } catch (e) {
+        console.error(e)
+        await m.react('✖️')
+        return conn.reply(m.chat, '⚠️ Ocurrió un error al crear el sticker.', m)
     }
 }
 
 handler.help = ['sticker']
-handler.tags = ['stickers']
-handler.command = ['s', 'sticker']
+handler.tags = ['sticker']
+handler.command = ['s', 'sticker', 'stiker']
+handler.register = true
 
 export default handler
 
-const isUrl = (text) => {
-    return text.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)(jpe?g|gif|png)/, 'gi'))
+async function toWebp(buffer) {
+    const { ext } = await fromBuffer(buffer)
+    if (!/(png|jpg|jpeg|mp4|mkv|m4p|gif|webp)/i.test(ext)) throw 'Media no compatible.'
+    
+    const input = path.join(global.tempDir || './tmp', `${Date.now()}.${ext}`)
+    const output = path.join(global.tempDir || './tmp', `${Date.now()}.webp`)
+    fs.writeFileSync(input, buffer)
+    
+    const scale = `scale='if(gt(iw,ih),512,-1):if(gt(iw,ih),-1,512)'`
+    
+    const options = [
+        '-vcodec', 'libwebp',
+        '-vf', `${scale},fps=15`,
+        ...(ext.match(/(mp4|mkv|m4p|gif)/) ?
+            ['-loop', '0', '-ss', '00:00:00', '-t', '00:00:10', '-preset', 'default', '-an', '-vsync', '0'] :
+            [])
+    ]
+    
+    return new Promise((resolve, reject) => {
+        fluent(input)
+            .addOutputOptions(options)
+            .toFormat('webp')
+            .save(output)
+            .on('end', () => {
+                const result = fs.readFileSync(output)
+                fs.unlinkSync(input)
+                fs.unlinkSync(output)
+                resolve(result)
+            })
+            .on('error', (err) => {
+                fs.unlinkSync(input)
+                reject(err)
+            })
+    })
+}
+
+function isUrl(text) {
+    return text.match(
+        new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)(jpe?g|gif|png)/, 'gi')
+    )
 }
