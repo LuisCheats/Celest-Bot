@@ -207,6 +207,6 @@ Yuta Okotsu cuenta con soporte para **subbots**, permitiendo que otros usuarios 
 </p>
 <p align="center">
 <a href="https://github.com/DuarteXV">
-<img src="https://github.com/DuarteXV.png?size=130" width="130px">
+<img src="https://github.com/DuarteXV.png?size=130" width="135px">
 </a>
 </p>
