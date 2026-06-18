@@ -1,0 +1,188 @@
+import config from "../config.js";
+import { log } from "./logger.js";
+import { getPlugins } from "./pluginLoader.js";
+import { db } from "../database/db.js";
+
+const groupCache = new Map();
+const prefixes   = Array.isArray(config.prefix) ? config.prefix : [config.prefix];
+
+function cleanJid(jid = "") {
+  if (!jid) return "";
+  const withoutResource = jid.split(":")[0];
+  const atIndex = jid.lastIndexOf("@");
+  if (atIndex === -1) return withoutResource;
+  return withoutResource + "@" + jid.slice(atIndex + 1);
+}
+
+export async function handleMessage(sock, rawMsg, botLabel = "MAIN") {
+  try {
+    const msg  = rawMsg;
+    const from = msg.key?.remoteJid;
+
+    if (!from) return;
+    if (from === "status@broadcast") return;
+
+    const isGroup   = from.endsWith("@g.us");
+    const senderJid = isGroup
+      ? (msg.key?.participant || msg.participant || "")
+      : from;
+
+    const sender = cleanJid(senderJid);
+    const botJid = cleanJid(sock.user?.id || "");
+
+    const body =
+      msg.message?.conversation ||
+      msg.message?.extendedTextMessage?.text ||
+      msg.message?.imageMessage?.caption ||
+      msg.message?.videoMessage?.caption ||
+      msg.message?.buttonsResponseMessage?.selectedButtonId ||
+      msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+      "";
+
+    const msgType = msg.message ? Object.keys(msg.message)[0] ?? "unknown" : "unknown";
+    const msgTypeLabel =
+      msgType === "conversation"        ? "Texto" :
+      msgType === "extendedTextMessage" ? "Texto" :
+      msgType === "imageMessage"        ? "🖼️ Imagen" :
+      msgType === "videoMessage"        ? "🎥 Video" :
+      msgType === "audioMessage"        ? "🎵 Audio" :
+      msgType === "stickerMessage"      ? "🎴 Sticker" :
+      msgType === "documentMessage"     ? "📄 Documento" :
+      msgType === "ptvMessage"          ? "📹 Nota de video" :
+      msgType === "reactionMessage"     ? "🔥 Reacción" :
+      msgType === "contactMessage"      ? "👤 Contacto" :
+      msgType === "locationMessage"     ? "📍 Ubicación" : "Otro"
+
+    const usedPrefix = prefixes.find((p) => body.startsWith(p)) ?? null;
+    const isCmd      = !!usedPrefix;
+
+    // Si el mensaje es del propio bot pero NO es un comando, lo ignoramos para evitar bucles.
+    if (msg.key?.fromMe && !isCmd) return;
+
+    const cmdName = isCmd ? body.slice(usedPrefix.length).trim().split(/\s+/)[0].toLowerCase() : "";
+    const args    = isCmd ? body.slice(usedPrefix.length + cmdName.length).trim().split(/\s+/) : [];
+    const text    = args.join(" ");
+
+    let groupName = "";
+    let groupMeta = null;
+
+    if (isGroup) {
+      if (groupCache.has(from)) {
+        groupMeta = groupCache.get(from);
+        groupName = groupMeta?.subject || from;
+      } else {
+        try {
+          groupMeta = await sock.groupMetadata(from);
+          groupName = groupMeta?.subject || from;
+          groupCache.set(from, groupMeta);
+          setTimeout(() => groupCache.delete(from), 10 * 60 * 1000);
+        } catch {
+          groupName = from;
+        }
+      }
+
+      // Validamos el bot primario, PERO permitimos que todos escuchen si el comando es 'delprimary'
+      const primaryBot = db.getPrimary(from);
+      if (primaryBot && cmdName !== "delprimary") {
+        const myId = botJid.split("@")[0];
+        if (primaryBot !== myId) return;
+      }
+    }
+
+    const senderNum = sender.split("@")[0];
+    const isOwner   = config.ownerNumber.includes(senderNum) || msg.key?.fromMe;
+    const isCoOwner = config.coOwners.includes(senderNum);
+    const isMod     = isOwner || isCoOwner || db.hasRole(senderNum, "mod");
+    const isPremium = isMod   || db.hasRole(senderNum, "premium");
+
+    let isAdmin    = false;
+    let isBotAdmin = false;
+
+    if (isGroup && groupMeta?.participants) {
+      const botNum = botJid.split("@")[0];
+      for (const p of groupMeta.participants) {
+        const num        = p.id.split(":")[0].split("@")[0];
+        const isAdminRole = p.admin === "admin" || p.admin === "superadmin";
+        if (num === senderNum) isAdmin    = isAdminRole;
+        if (num === botNum)    isBotAdmin = isAdminRole;
+        if (isAdmin && isBotAdmin) break;
+      }
+    }
+
+    log.message({ from, sender, isGroup, groupName, body, isCmd, cmdName, botLabel, msgTypeLabel });
+
+    if (!isCmd) return;
+
+    const plugins = getPlugins();
+    const plugin  = plugins.get(cmdName);
+    if (!plugin) return;
+
+    const ctx = {
+      sock,
+      msg,
+      from,
+      sender,
+      senderNum,
+      botJid,
+      botLabel,
+      isGroup,
+      groupName,
+      groupMeta,
+      body,
+      isCmd,
+      cmdName,
+      args,
+      text,
+      usedPrefix,
+      isOwner,
+      isCoOwner,
+      isMod,
+      isPremium,
+      isAdmin,
+      isBotAdmin,
+      reply: async (content) => {
+        if (typeof content === "string") content = { text: content };
+        if (content.text !== undefined) content.mentions = [sender];
+        try {
+          return await sock.sendMessage(from, content, { quoted: msg });
+        } catch (e1) {
+          log.warn(`[${botLabel}] reply con quoted falló (${e1.message}), reintentando sin quoted...`);
+          try {
+            return await sock.sendMessage(from, content);
+          } catch (e2) {
+            log.error(`[${botLabel}] reply sin quoted también falló: ${e2.message} | from: ${from}`);
+          }
+        }
+      },
+      react: async (emoji) => {
+        try {
+          return await sock.sendMessage(from, { react: { text: emoji, key: msg.key } });
+        } catch (e) {
+          log.warn(`[${botLabel}] react falló: ${e.message} | from: ${from}`);
+        }
+      },
+    };
+
+    if (plugin.ownerOnly   && !isOwner)                return ctx.reply({ text: "❌ Solo el owner puede usar este comando." });
+    if (plugin.modOnly     && !isMod)                  return ctx.reply({ text: "❌ Solo moderadores pueden usar este comando." });
+    if (plugin.adminOnly   && isGroup && !isAdmin && !isOwner) return ctx.reply({ text: "❌ Solo admins del grupo pueden usar este comando." });
+    if (plugin.botAdmin    && isGroup && !isBotAdmin)          return ctx.reply({ text: "❌ El bot necesita ser admin del grupo." });
+    if (plugin.premiumOnly && !isPremium)                      return ctx.reply({ text: "⭐ Este comando es exclusivo para premium." });
+    if (plugin.groupOnly   && !isGroup)                        return ctx.reply({ text: "👥 Este comando solo funciona en grupos." });
+    if (plugin.privateOnly && isGroup)                         return ctx.reply({ text: "📩 Este comando solo funciona en privado." });
+
+    const start = Date.now();
+    try {
+      await plugin.run(ctx);
+      log.cmdExec({ cmdName, sender: senderNum, success: true,  ms: Date.now() - start, botLabel });
+    } catch (e) {
+      log.cmdExec({ cmdName, sender: senderNum, success: false, ms: Date.now() - start, botLabel });
+      log.error(`Comando ${cmdName}: ${e.message}`);
+      await ctx.react("❌");
+      await ctx.reply({ text: `❌ Error ejecutando \`${cmdName}\`:\n${e.message}` });
+    }
+
+  } catch (e) {
+    log.error(`handleMessage: ${e.message}`);
+  }
+}
