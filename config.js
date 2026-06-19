@@ -1,19 +1,19 @@
 export default {
   // ─── BOT INFO ───────────────────────────────────────────
-  botName:  "Yuta Okotsu",
+  botName:  "Kyoko",
   prefix:   ".",
 
   // ─── GLOBALS ────────────────────────────────────────────
-  botname:  "⚔️ Yuta Okotsu MD",
-  wm:       "⚔️ Yuta Okotsu MD•DuarteXV",
-  author:   "© DuarteXV",
-  dev:      "© 🄿🄾🅆🄴🅁🄴🄳 DuarteXV",
+  botname:  "Kyoko MD",
+  wm:       "Kyoko - LuisXin",
+  author:   "© LuisXin",
+  dev:      "By LuisXin",
   packname: "⚔️ 𝒀𝒖𝒕𝒂 𝑶𝒌𝒐𝒕𝒔𝒖 𝑴𝑫 ⚔️",
   etiqueta: "⚔️ DuarteXV ⚔️",
   textbot:  "⚔️ Yuta Okotsu, el hechicero de grado especial. Su amor se convierte en la maldición más poderosa. ⚔️",
 
   // ─── OWNER ──────────────────────────────────────────────
-  ownerNumber: ["573135180876", "50588112827", "573133374132", "9779829141452", "18096758983"],
+  ownerNumber: ["50765836410", "50588112827"] ,
   coOwners: [],
 
   // ─── SESIONES ───────────────────────────────────────────

@@ -1,6 +1,6 @@
-# Yuta Okotsu Bot 🍁
+# Kyoko-MD
 <p align="center">
-<img src="./database/ed.gif" width="75%" alt="Yuta Okotsu Bot">
+<img src="./database/ed.gif" width="75%" alt="Kyoko Bot">
 </p>
 
 > Bot de WhatsApp estético, funcional y modular, desarrollado con **Baileys**, usando **SQLite** y una arquitectura limpia para bots principales, subbots y plugins.
@@ -25,7 +25,7 @@
 
 ## 📍 Descripción
 
-**Yuta Okotsu Bot MD** es un bot de WhatsApp basado en `baileys`, creado con una estructura modular para manejar comandos, subbots, sesiones, base de datos y funciones multimedia de forma organizada.
+**Kyoko MD** es un bot de WhatsApp basado en `baileys`, creado con una estructura modular para manejar comandos, subbots, sesiones, base de datos y funciones multimedia de forma organizada.
 
 Su diseño está orientado a mantener el código limpio, facilitar la expansión del proyecto y permitir que otros usuarios puedan vincular sus propios números como subbots.
 

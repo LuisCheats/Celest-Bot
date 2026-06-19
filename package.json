@@ -1,14 +1,14 @@
 {
-  "name": "yuta-bot",
+  "name": "kyoko",
   "version": "1.0.0",
-  "description": "Yuta Okotsu WhatsApp Bot - Powered by DuarteXV",
+  "description": "WhatsApp Bot - Powered by DuarteXV",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "github:this-xys/baileys",
+    "@whiskeysockets/baileys": "github:LuisCheats/baileys",
     "axios": "^1.7.2",
     "better-sqlite3": "^12.10.1",
     "chalk": "^5.3.0",
